@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\User;
+use App\Profile;
 use Illuminate\Http\Request;
 use DataTables;
 use Redirect, Response;
 
-class UserController extends Controller
+class ProfileController extends Controller
 {
   /**
    * Display a listing of the resource.
@@ -17,15 +17,15 @@ class UserController extends Controller
   public function index(Request $request)
   {
     if ($request->ajax()) {
-      $data = User::latest()->get();
+      $data = Profile::get();
       return Datatables::of($data)
         ->addIndexColumn()
         ->addColumn('action', function ($row) {
 
-          $action = '<a class="fa fa-eye" id="show-user" data-toggle="modal" data-id=' . $row->id . '></a>
-<a class="fa fa-edit" id="edit-user" data-toggle="modal" data-id=' . $row->id . '></a>
+          $action = '<a class="fa fa-eye" id="show-profile" data-toggle="modal" data-id=' . $row->id . '></a>
+<a class="fa fa-edit" id="edit-profile" data-toggle="modal" data-id=' . $row->id . '></a>
 <meta name="csrf-token" content="{{ csrf_token() }}">
-<a id="delete-user" data-id=' . $row->id . ' class="fa fa-trash delete-user"></a>';
+<a id="delete-profile" data-id=' . $row->id . ' class="fa fa-trash delete-profile"></a>';
 
           return $action;
         })
@@ -33,7 +33,7 @@ class UserController extends Controller
         ->make(true);
     }
 
-    return view('users');
+    return view('usuarios');
   }
 
   public function store(Request $request)
@@ -46,7 +46,7 @@ class UserController extends Controller
     ]);
 
     $uId = $request->user_id;
-    User::updateOrCreate(['id' => $uId], ['name' => $request->name, 'email' => $request->email]);
+    Profile::updateOrCreate(['id' => $uId], ['name' => $request->name, 'email' => $request->email]);
     if (empty($request->user_id))
       $msg = 'User created successfully.';
     else
@@ -64,7 +64,7 @@ class UserController extends Controller
   public function show($id)
   {
     $where = array('id' => $id);
-    $user = User::where($where)->first();
+    $user = Profile::where($where)->first();
     return Response::json($user);
     //return view('users.show',compact('user'));
   }
@@ -79,7 +79,7 @@ class UserController extends Controller
   public function edit($id)
   {
     $where = array('id' => $id);
-    $user = User::where($where)->first();
+    $user = Profile::where($where)->first();
     return Response::json($user);
   }
 
@@ -92,7 +92,7 @@ class UserController extends Controller
 
   public function destroy($id)
   {
-    $user = User::where('id', $id)->delete();
+    $user = Profile::where('id', $id)->delete();
     return Response::json($user);
     //return redirect()->route('users.index');
   }

@@ -19,6 +19,7 @@ Route::get('/', function () {
 Route::get('/home', function () {
     return view('home');
 });
+Route::resource('/profiles', 'ProfileController');
 
 Route::resource('users','UserController');
 Route::get('users/{id}/edit/','UserController@edit');

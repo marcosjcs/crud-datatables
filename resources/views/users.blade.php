@@ -7,10 +7,20 @@
     <link href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css" rel="stylesheet">
     
 @endsection
+@section('content_header')
+<div class="row mb-2">
+  <div class="col-sm-6">
+    <h1 class="m-0 text-dark">Users</h1>
+  </div><!-- /.col -->
+  <div class="col-sm-6">
+    <ol class="breadcrumb float-sm-right">
+      <li class="breadcrumb-item"><a href="/home">Home</a></li>
+      <li class="breadcrumb-item active">Users</li>
+    </ol>
+  </div><!-- /.col -->
+</div>
+@endsection
 @section('content')
-    
-        <h1 align="center">Laravel 7 CRUD using Datatables</h1>
-        <br />
         <div class="row">
             <div class="col-lg-12 margin-tb">
                 <div class="pull-right">
@@ -26,7 +36,7 @@
                     <th width="5%">Id</th>
                     <th width="30%">Name</th>
                     <th width="30%">Email</th>
-                    <th width="20%">Action</th>
+                    <th width="10%">Action</th>
                 </tr>
             </thead>
             <tbody>
