@@ -1,12 +1,6 @@
 @extends('adminlte::page')
 
-@section('css')
-    <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css" />
-    <link href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet">
-    <link href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css" rel="stylesheet">
-    
-@endsection
+
 @section('content_header')
 <div class="row mb-2">
   <div class="col-sm-6">
@@ -120,12 +114,10 @@
 
 @endsection
 
+@section('plugins.Datatables', true)
+
 @section('js')
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.js"></script>
-    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
     <script>
         error = false
 
@@ -141,7 +133,7 @@
     $(document).ready(function() {
 
         var table = $('.data-table').DataTable({
-            processing: true,
+            processing: false,
             serverSide: true,
             ajax: "{{ route('users.index') }}",
             columns: [{
@@ -166,7 +158,27 @@
                     orderable: false,
                     searchable: false
                 },
-            ]
+            ],
+            initComplete: function () {
+            this.api().columns().every( function () {
+                var column = this;
+                var select = $('<select><option value=""></option></select>')
+                    .appendTo( $(column.footer()).empty() )
+                    .on( 'change', function () {
+                        var val = $.fn.dataTable.util.escapeRegex(
+                            $(this).val()
+                        );
+ 
+                        column
+                            .search( val ? '^'+val+'$' : '', true, false )
+                            .draw();
+                    } );
+ 
+                column.data().unique().sort().each( function ( d, j ) {
+                    select.append( '<option value="'+d+'">'+d+'</option>' )
+                } );
+            } );
+        }
         });
 
         /* When click New customer button */
